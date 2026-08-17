@@ -1,0 +1,9 @@
+# Technical Statement
+
+The supplied starter was a generic LangChain research CLI with Tavily search and prompt-level citation instructions. I adapted it into an on-demand AI Tutor for developers and technical learners: one AI question produces one concise lesson grounded in current, inspectable sources.
+
+The meaningful improvement is a deterministic evidence boundary around the agent. A small Tavily wrapper limits each run to two focused searches, normalizes results into a per-run registry, and assigns stable source IDs. Current-time questions require a domain-restricted search and receive a compact primary-domain default. The model may cite only retrieved IDs using an exact citation format. After generation, code rejects missing, malformed, or unknown citations, model-authored URLs, or answers produced without retrieval; it then renders the final source URLs from the registry. This does not pretend that string validation proves semantic truth, so live sample answers are also reviewed against their retrieved snippets.
+
+LangSmith supplies end-to-end observability through standard LangChain tracing. Each invocation generates one UUIDv7, passes it as the top-level LangChain `run_id`, and propagates it as `thread_id` metadata to root and child runs. The UUID is therefore the root run ID, LangSmith `trace_id`, and one-turn thread ID. The trace also has the `ai-tutor-answer` run name, `ai-tutor` and `cli` tags, model metadata, and the same UUID as `cli_run_id` metadata. The shared ID is shown in CLI success and failure output so a user can find the exact trace or thread.
+
+The architecture is intentionally small: one Python CLI, one LangChain agent, one Nebius model, one Tavily tool, and deterministic tests. There is no UI, database, vector store, conversation memory, multi-agent workflow, skills layer, or evaluator model. This keeps the improvement understandable, testable, and appropriate for the assignment's 4–6 hour scope.
