@@ -10,6 +10,7 @@ from langchain_core.callbacks import BaseCallbackHandler
 from langchain_core.runnables import RunnableLambda
 
 from ai_tutor import (
+    DEFAULT_MODEL,
     ConfigurationError,
     GroundingError,
     RetrievalError,
@@ -106,6 +107,10 @@ def test_system_prompt_encodes_one_search_and_output_contract() -> None:
     assert "<response_format>" in prompt
     assert "non-empty Markdown lesson" in prompt
     assert "## Answer\n## Explanation\n## What to remember" in prompt
+
+
+def test_default_model_is_the_verified_non_reasoning_instruct_model() -> None:
+    assert DEFAULT_MODEL == "Qwen/Qwen3-30B-A3B-Instruct-2507"
 
 
 def test_environment_requires_provider_keys() -> None:

@@ -31,11 +31,7 @@ Do not commit `.env`; it is ignored by Git.
 uv run ai_tutor.py "Why does retrieval-augmented generation reduce hallucinations?"
 ```
 
-Use another Nebius model when needed:
-
-```bash
-uv run ai_tutor.py --model "moonshotai/Kimi-K2.6" "What is an agent evaluation?"
-```
+The verified default is `Qwen/Qwen3-30B-A3B-Instruct-2507`, a current Nebius model with tool support and no reasoning-only response mode. The CLI retains `--model` for deliberate experiments, but the submission exercises only this default path.
 
 The CLI prints whether LangSmith tracing is enabled and assigns one UUIDv7 as `Run ID / LangSmith Trace ID / Thread ID`. That UUID is passed as the top-level LangChain `run_id`, so it becomes both the root run ID and the LangSmith `trace_id`. It is also propagated to root and child runs as `thread_id` metadata and stored as `cli_run_id` metadata for convenient filtering.
 

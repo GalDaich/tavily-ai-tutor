@@ -18,8 +18,10 @@ A no-Tavily regression check reused the successful trace evidence and restored t
 
 The implementation therefore removes only the two model overrides. It keeps the actual KISS retrieval fix: one basic Tavily request, one-credit normal cost, deterministic domain enforcement for current questions, and no retry or fallback generation path.
 
-## Final acceptance
+## Provisional acceptance
 
 The exact CLI command passed after the revert. LangSmith trace `01a0116e-5873-7760-814b-12d0603540ba` produced a non-empty lesson with all required headings and validated citations. The CLI reported one search, five sources, and one Tavily credit, and the UUID matched the run ID, LangSmith trace ID, and thread ID.
 
 The full deterministic suite also remained green: 22 tests passed with Ruff formatting and lint checks and Git whitespace validation.
+
+A later run showed that this single success did not establish Kimi reliability. Build-log entry 10 records the repeated failure and the verified default-model replacement.

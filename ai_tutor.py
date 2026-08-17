@@ -24,7 +24,7 @@ from rich.console import Console
 from rich.markdown import Markdown
 from rich.panel import Panel
 
-DEFAULT_MODEL = "moonshotai/Kimi-K2.6"
+DEFAULT_MODEL = "Qwen/Qwen3-30B-A3B-Instruct-2507"
 MAX_SEARCHES = 1
 MAX_RESULTS = 5
 SNIPPET_LIMIT = 700

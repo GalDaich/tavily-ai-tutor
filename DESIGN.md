@@ -29,7 +29,7 @@ The tutor covers AI/ML concepts, LLM applications, agents, evaluation, infrastru
 The implementation keeps the starter's core architecture:
 
 1. Typer accepts one question and an optional model name.
-2. LangChain `create_agent` runs one Nebius-hosted chat model.
+2. LangChain `create_agent` runs the verified Nebius-hosted Qwen 30B Instruct model.
 3. One wrapped Tavily search tool retrieves current evidence.
 4. A per-run source registry assigns IDs such as `S1` and `S2`.
 5. Deterministic code validates the model's cited IDs.
@@ -68,7 +68,7 @@ This contract proves that citations originate from retrieved results. It does no
 
 LangChain sends the tutor instructions as a system-role message and the question as a user-role message. The system-message content has three flat XML sections—`instructions`, `evidence_rules`, and `response_format`—with no literal `<system>` wrapper. The tutor should lead with the answer, define necessary jargon, use a concrete example where it helps, and distinguish established facts from judgment or active debate. It should match the question's apparent technical depth without adding a learner-profile system or conversation memory.
 
-The Nebius request retains the starter's provider defaults. Explicit Kimi reasoning and token-budget overrides were rejected after a live post-tool response ended with reasoning tokens but no visible answer. The application does not add a retry or fallback generation path.
+The default model is `Qwen/Qwen3-30B-A3B-Instruct-2507`, which Nebius identifies as tool-capable without a reasoning mode. Four consecutive full-agent fixture runs produced visible, structurally valid answers before it replaced Kimi K2.6. The application does not add a retry or fallback generation path.
 
 The response headings are:
 
@@ -159,7 +159,8 @@ Each live result is manually checked against its cited snippets, correlated with
 │   ├── 06-final-acceptance-and-release-audit.md
 │   ├── 07-repository-publication.md
 │   ├── 08-kiss-search-and-prompt-optimization.md
-│   └── 09-live-key-regression-and-model-revert.md
+│   ├── 09-live-key-regression-and-model-revert.md
+│   └── 10-kimi-instability-and-default-model-switch.md
 ├── pyproject.toml
 ├── uv.lock
 └── tests/
