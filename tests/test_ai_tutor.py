@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+from datetime import date
 from typing import Any
 from uuid import UUID
 
@@ -15,6 +16,7 @@ from ai_tutor import (
     SearchSession,
     SourceRegistry,
     build_run_config,
+    build_system_prompt,
     new_correlation_id,
     render_answer,
     requires_current_evidence,
@@ -93,6 +95,19 @@ def test_thread_id_metadata_propagates_to_child_runs() -> None:
     assert all(metadata["thread_id"] == str(run_id) for metadata in recorder.metadata)
 
 
+def test_system_prompt_encodes_one_search_and_output_contract() -> None:
+    prompt = build_system_prompt(date(2026, 8, 17))
+
+    assert "<system>" not in prompt
+    assert "<instructions>" in prompt
+    assert "exactly once" in prompt
+    assert "include 2026" in prompt
+    assert "<evidence_rules>" in prompt
+    assert "<response_format>" in prompt
+    assert "non-empty Markdown lesson" in prompt
+    assert "## Answer\n## Explanation\n## What to remember" in prompt
+
+
 def test_environment_requires_provider_keys() -> None:
     with pytest.raises(ConfigurationError, match="TAVILY_API_KEY, NEBIUS_API_KEY"):
         validate_environment({})
@@ -148,7 +163,7 @@ def test_search_session_normalizes_results_and_records_usage() -> None:
                 ],
                 "request_id": "request-123",
                 "response_time": 1.25,
-                "usage": {"credits": 2},
+                "usage": {"credits": 1},
             }
         ]
     )
@@ -164,7 +179,7 @@ def test_search_session_normalizes_results_and_records_usage() -> None:
         "snippet": "A useful fact",
     }
     assert session.search_count == 1
-    assert session.total_credits == 2
+    assert session.total_credits == 1
     assert session.records[0].request_id == "request-123"
     assert session.has_domain_restricted_search is False
 
@@ -210,6 +225,28 @@ def test_search_session_applies_default_primary_domains() -> None:
     assert session.has_domain_restricted_search is True
 
 
+def test_search_session_discards_results_outside_requested_domains() -> None:
+    backend = FakeSearchBackend(
+        [
+            {
+                "results": [
+                    result("https://linkedin.com/posts/example", "Social"),
+                    result("https://developers.openai.com/evals", "OpenAI"),
+                ]
+            }
+        ]
+    )
+    session = SearchSession(backend, SourceRegistry())
+
+    payload = json.loads(
+        session.search("current evaluation guidance", include_domains=["openai.com"])
+    )
+
+    assert [source["url"] for source in payload["sources"]] == [
+        "https://developers.openai.com/evals"
+    ]
+
+
 def test_current_questions_require_primary_source_search() -> None:
     assert requires_current_evidence(
         "What changed recently in how AI agents are evaluated?"
@@ -223,11 +260,28 @@ def test_search_session_rejects_empty_results() -> None:
         session.search("empty")
 
 
+def test_search_session_surfaces_tavily_provider_error() -> None:
+    session = SearchSession(
+        FakeSearchBackend(
+            [
+                {
+                    "error": {
+                        "error": "ValueError",
+                        "message": "Error 432: plan usage limit exceeded",
+                    }
+                }
+            ]
+        ),
+        SourceRegistry(),
+    )
+
+    with pytest.raises(RetrievalError, match="Error 432: plan usage limit exceeded"):
+        session.search("temperature zero determinism")
+
+
 def test_search_session_enforces_search_limit() -> None:
     payload = {"results": [result("https://example.com")]}
-    session = SearchSession(
-        FakeSearchBackend([payload, payload]), SourceRegistry(), max_searches=1
-    )
+    session = SearchSession(FakeSearchBackend([payload, payload]), SourceRegistry())
     session.search("first")
     with pytest.raises(RetrievalError, match="Search limit reached"):
         session.search("second")

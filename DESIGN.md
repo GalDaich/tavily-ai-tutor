@@ -54,29 +54,30 @@ This contract proves that citations originate from retrieved results. It does no
 ## Retrieval policy
 
 - Prefer official documentation, standards, and original research.
-- Detect explicit current-time wording such as “recent” or “latest,” require a
-  domain-restricted search, and supply a compact primary-domain default.
-- Allow the model to narrow any search further through Tavily's
-  `include_domains` parameter.
-- Use one focused search first; allow a second search only when the first evidence is insufficient or the question has two distinct parts.
-- Return at most five results per search.
+- Permit exactly one basic-depth search per tutor run.
+- Detect explicit current-time wording such as “recent” or “latest” and apply a
+  compact primary-domain filter.
+- Discard returned URLs that do not match an active domain filter.
+- Return at most five results from the search.
 - Keep raw page content disabled to control latency and context size.
 - Include Tavily usage and request metadata for debugging.
+- Preserve Tavily provider errors instead of relabeling them as empty retrieval.
 - Inject the current date into the tutor prompt so time-relative questions are interpreted correctly.
 
 ## Tutoring behavior
 
-The tutor should lead with the answer, define necessary jargon, use a concrete example where it helps, and distinguish established facts from judgment or active debate. It should match the question's apparent technical depth without adding a learner-profile system or conversation memory.
+LangChain sends the tutor instructions as a system-role message and the question as a user-role message. The system-message content has three flat XML sections—`instructions`, `evidence_rules`, and `response_format`—with no literal `<system>` wrapper. The tutor should lead with the answer, define necessary jargon, use a concrete example where it helps, and distinguish established facts from judgment or active debate. It should match the question's apparent technical depth without adding a learner-profile system or conversation memory.
+
+The Nebius request uses low reasoning effort and a 2,048-token output budget. This leaves enough budget for the visible answer from the reasoning model without adding retries or fallback generation.
 
 The response headings are:
 
 1. `Answer`
 2. `Explanation`
-3. `Example` when useful
+3. `Example` or `Uncertainty` when useful
 4. `What to remember`
-5. `Uncertainty` when material
-6. `Check yourself` when useful
-7. `Sources`, rendered deterministically
+5. `Check yourself` when useful
+6. `Sources`, rendered deterministically
 
 ## Observability contract
 
@@ -126,8 +127,10 @@ Automated tests cover:
 - missing, malformed, and unknown citations;
 - empty retrieval;
 - environment validation;
-- deterministic source rendering.
-- primary-domain forwarding and current-question detection.
+- deterministic source rendering;
+- provider-error propagation;
+- filtered-domain enforcement and current-question detection;
+- the one-search and structured-output prompt contracts.
 
 Live verification uses three fixed questions:
 
@@ -154,7 +157,8 @@ Each live result is manually checked against its cited snippets, correlated with
 │   ├── 04-langsmith-trace-id-correlation.md
 │   ├── 05-test-suite-audit.md
 │   ├── 06-final-acceptance-and-release-audit.md
-│   └── 07-repository-publication.md
+│   ├── 07-repository-publication.md
+│   └── 08-kiss-search-and-prompt-optimization.md
 ├── pyproject.toml
 ├── uv.lock
 └── tests/

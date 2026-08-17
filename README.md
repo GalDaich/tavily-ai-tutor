@@ -64,8 +64,10 @@ For each live answer, confirm that its cited snippets support its claims and tha
 
 Every substantive answer must retrieve Tavily sources. Retrieved URLs receive stable IDs such as `[S1]`; the model cites those IDs, deterministic code rejects missing or invented IDs, and the CLI renders the final URLs. This proves citation provenance, not semantic truth, so the recorded sample runs also require human review.
 
-For questions containing current-time language such as “recent” or “latest,” the run requires a domain-restricted search and supplies a compact first-party AI and research-domain default. The model may narrow that search to named primary domains through the same tool.
+Each run permits exactly one basic-depth Tavily search with at most five results. Basic search normally costs one Tavily API credit; see [Tavily Credits & Pricing](https://docs.tavily.com/documentation/api-credits).
 
-Provider failures, empty retrieval, and invalid citations are reported directly. The tutor does not substitute an ungrounded fallback answer.
+For questions containing current-time language such as “recent” or “latest,” the run supplies a compact first-party AI and research-domain filter. Returned URLs are checked against that filter before the model can cite them.
+
+Provider failures—including Tavily plan-limit messages—empty retrieval, off-domain retrieval, and invalid citations are reported directly. The tutor does not substitute an ungrounded fallback answer.
 
 See [DESIGN.md](DESIGN.md) for the architecture and [build_log/](build_log/) for the engineering record.
