@@ -34,6 +34,6 @@ Trace `01a01161-e1d8-7983-a72c-07dc2b36cd10` confirmed that the revised path iss
 
 Trace `01a01162-e842-78c3-b4d6-7b6dbc9d3e65` confirmed the one-request failure behavior after the Tavily free-tier monthly quota was exhausted: the first provider request returned error 432, the exact provider message reached the CLI, and the shared run/trace/thread ID remained intact. Combined acceptance was unavailable at this stage; build-log entry 09 records the later fresh-key regression, model-setting revert, and successful end-to-end run.
 
-## Final local verification
+## Checkpoint local verification
 
 The final implementation passed all 22 deterministic tests, Ruff formatting and lint checks, locked dependency resolution and synchronization, Python bytecode compilation, the CLI help smoke test, and Git whitespace validation. The role boundary is visible in the production call path: `build_system_prompt()` is passed through LangChain's `system_prompt` parameter, while the question is passed as a message with `role: "user"`.

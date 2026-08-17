@@ -8,4 +8,4 @@ The audited implementation was committed on `main` as `9229335` (`Build grounded
 
 Post-push verification confirmed that local `HEAD` and `origin/main` resolved to the same commit. The GitHub tree contained only the intended application, tests, documentation, build-log entries, dependency files, and safe environment-variable template. It did not contain `.env` or the supplied assignment materials.
 
-The repository remains private by default because it is a take-home submission. Before sending the link, either grant the Tavily reviewers access or intentionally change the repository visibility.
+The repository was private at this checkpoint. Build-log entry 11 records the later user-authorized public-visibility change and its verification.

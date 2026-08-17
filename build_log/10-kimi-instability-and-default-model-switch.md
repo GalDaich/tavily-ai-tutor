@@ -20,8 +20,10 @@ Nebius's live model catalog identifies this model as supporting tools, JSON mode
 
 The `--model` option remains available for deliberate experiments, but the documented and tested submission path uses only the Qwen default.
 
-## Final acceptance
+## Operational acceptance
 
 The exact CLI command passed end to end with the Qwen default. LangSmith trace `01a01173-4109-70d0-bf65-c1f25f51c99e` returned a non-empty lesson with the required headings and validated citations. The CLI exited successfully and reported one basic Tavily search, five sources, and one consumed credit. The same UUID appeared as the CLI run ID, LangSmith trace ID, and thread ID.
 
 The final deterministic suite contains 23 passing tests, including a regression assertion that pins the exercised non-reasoning default model. Ruff formatting, lint, Python compilation, and Git whitespace validation also passed.
+
+This checkpoint established end-to-end operability, not automatic semantic entailment. Entry 11 records the final human review of the release-model samples.

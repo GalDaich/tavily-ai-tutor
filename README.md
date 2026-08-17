@@ -42,6 +42,9 @@ The tutor remains deliberately single-turn: LangSmith thread metadata groups and
 ## Verify
 
 ```bash
+uv lock --check
+uv sync --locked
+uv run ruff format --check .
 uv run ruff check .
 uv run pytest
 ```
@@ -54,7 +57,7 @@ uv run ai_tutor.py "What changed recently in how AI agents are evaluated?"
 uv run ai_tutor.py "Does temperature zero make an LLM fully deterministic?"
 ```
 
-For each live answer, confirm that its cited snippets support its claims and that the matching run appears in the configured LangSmith project.
+For each live answer, confirm that its cited snippets support its claims and that the matching run appears in the configured LangSmith project. A successful CLI exit proves the structural and citation-ID contract; it does not replace human review of semantic support.
 
 ## Trust boundary
 
@@ -66,4 +69,4 @@ For questions containing current-time language such as “recent” or “latest
 
 Provider failures—including Tavily plan-limit messages—empty retrieval, off-domain retrieval, and invalid citations are reported directly. The tutor does not substitute an ungrounded fallback answer.
 
-See [DESIGN.md](DESIGN.md) for the architecture and [build_log/](build_log/) for the engineering record.
+See [TECHNICAL_STATEMENT.md](TECHNICAL_STATEMENT.md) for the required approach-and-value summary, [DESIGN.md](DESIGN.md) for the architecture, and [build_log/](build_log/) for the complete engineering record and final release evidence.

@@ -130,7 +130,8 @@ Automated tests cover:
 - deterministic source rendering;
 - provider-error propagation;
 - filtered-domain enforcement and current-question detection;
-- the one-search and structured-output prompt contracts.
+- the one-search and structured-output prompt contracts;
+- the verified default-model selection.
 
 Live verification uses three fixed questions:
 
@@ -138,9 +139,9 @@ Live verification uses three fixed questions:
 2. A current AI engineering question that requires fresh retrieval.
 3. A nuanced misconception where the tutor should state limits or uncertainty.
 
-Each live result is manually checked against its cited snippets, correlated with its LangSmith run, and recorded in `build_log/06-final-acceptance-and-release-audit.md`.
+Operational and semantic acceptance are separate. A zero exit status proves that retrieval, model generation, response structure, citation IDs, rendering, and tracing completed. Human review then checks whether each cited snippet actually supports the adjacent claim and whether the source quality is appropriate. The current release audit and latest Qwen traces are recorded in `build_log/11-final-submission-audit-and-publication.md`; entry 06 is an earlier implementation checkpoint.
 
-## Planned repository shape
+## Repository shape
 
 ```text
 .
@@ -160,7 +161,8 @@ Each live result is manually checked against its cited snippets, correlated with
 │   ├── 07-repository-publication.md
 │   ├── 08-kiss-search-and-prompt-optimization.md
 │   ├── 09-live-key-regression-and-model-revert.md
-│   └── 10-kimi-instability-and-default-model-switch.md
+│   ├── 10-kimi-instability-and-default-model-switch.md
+│   └── 11-final-submission-audit-and-publication.md
 ├── pyproject.toml
 ├── uv.lock
 └── tests/

@@ -1,5 +1,7 @@
 # Final Acceptance and Release Audit
 
+> Historical checkpoint: this entry records the accepted pre-KISS implementation. Entries 08–11 document the later one-search policy, model-reliability work, and current submission state.
+
 ## 2026-08-17 — Pre-submission request
 
 The user requested a complete repository audit before commit, publication, and submission. The audit re-read the assignment, reconciled each deliverable, ran the deterministic checks, exercised all three documented live questions, inspected their exact Tavily snippets, and queried LangSmith directly for trace and thread evidence.
