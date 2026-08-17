@@ -153,7 +153,8 @@ Each live result is manually checked against its cited snippets, correlated with
 │   ├── 03-core-implementation-and-verification.md
 │   ├── 04-langsmith-trace-id-correlation.md
 │   ├── 05-test-suite-audit.md
-│   └── 06-final-acceptance-and-release-audit.md
+│   ├── 06-final-acceptance-and-release-audit.md
+│   └── 07-repository-publication.md
 ├── pyproject.toml
 ├── uv.lock
 └── tests/
