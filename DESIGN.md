@@ -68,7 +68,7 @@ This contract proves that citations originate from retrieved results. It does no
 
 LangChain sends the tutor instructions as a system-role message and the question as a user-role message. The system-message content has three flat XML sections—`instructions`, `evidence_rules`, and `response_format`—with no literal `<system>` wrapper. The tutor should lead with the answer, define necessary jargon, use a concrete example where it helps, and distinguish established facts from judgment or active debate. It should match the question's apparent technical depth without adding a learner-profile system or conversation memory.
 
-The Nebius request uses low reasoning effort and a 2,048-token output budget. This leaves enough budget for the visible answer from the reasoning model without adding retries or fallback generation.
+The Nebius request retains the starter's provider defaults. Explicit Kimi reasoning and token-budget overrides were rejected after a live post-tool response ended with reasoning tokens but no visible answer. The application does not add a retry or fallback generation path.
 
 The response headings are:
 
@@ -158,7 +158,8 @@ Each live result is manually checked against its cited snippets, correlated with
 │   ├── 05-test-suite-audit.md
 │   ├── 06-final-acceptance-and-release-audit.md
 │   ├── 07-repository-publication.md
-│   └── 08-kiss-search-and-prompt-optimization.md
+│   ├── 08-kiss-search-and-prompt-optimization.md
+│   └── 09-live-key-regression-and-model-revert.md
 ├── pyproject.toml
 ├── uv.lock
 └── tests/

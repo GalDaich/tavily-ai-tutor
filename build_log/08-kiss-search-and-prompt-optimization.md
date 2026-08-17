@@ -30,9 +30,9 @@ The prompt explicitly tells the model to treat retrieved text as evidence rather
 
 The focused suite now includes prompt-contract, provider-error, off-domain filtering, one-search-limit, and one-credit usage fixtures alongside the existing grounding and observability tests.
 
-Trace `01a01161-e1d8-7983-a72c-07dc2b36cd10` confirmed that the revised path issued exactly one basic Tavily request and consumed one credit. Its model turn then exhausted its response budget in hidden reasoning and returned no visible lesson. A controlled fixture run against the real Nebius model isolated that behavior from Tavily and passed after setting low reasoning effort with a 2,048-token output budget: one tool call, a non-empty lesson, required headings, and valid source IDs.
+Trace `01a01161-e1d8-7983-a72c-07dc2b36cd10` confirmed that the revised path issued exactly one basic Tavily request and consumed one credit. Its model turn then returned no visible lesson. A controlled fixture run initially appeared to pass after setting low reasoning effort with a 2,048-token output budget, but the later live-key regression in build-log entry 09 invalidated that model configuration.
 
-Trace `01a01162-e842-78c3-b4d6-7b6dbc9d3e65` confirmed the final one-request failure behavior after the Tavily free-tier monthly quota was exhausted: the first provider request returned error 432, the exact provider message reached the CLI, and the shared run/trace/thread ID remained intact. A successful combined Tavily-plus-Nebius rerun under the final settings cannot be completed until the monthly quota resets or another authorized Tavily key is configured; this log does not claim that unavailable end-to-end result.
+Trace `01a01162-e842-78c3-b4d6-7b6dbc9d3e65` confirmed the one-request failure behavior after the Tavily free-tier monthly quota was exhausted: the first provider request returned error 432, the exact provider message reached the CLI, and the shared run/trace/thread ID remained intact. Combined acceptance was unavailable at this stage; build-log entry 09 records the later fresh-key regression, model-setting revert, and successful end-to-end run.
 
 ## Final local verification
 

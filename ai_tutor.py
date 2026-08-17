@@ -25,8 +25,6 @@ from rich.markdown import Markdown
 from rich.panel import Panel
 
 DEFAULT_MODEL = "moonshotai/Kimi-K2.6"
-MODEL_MAX_TOKENS = 2048
-MODEL_REASONING_EFFORT = "low"
 MAX_SEARCHES = 1
 MAX_RESULTS = 5
 SNIPPET_LIMIT = 700
@@ -456,12 +454,7 @@ def run_tutor(
         registry,
         default_domains=PRIMARY_AI_DOMAINS if current_evidence_required else (),
     )
-    chat_model = ChatNebius(
-        model=model_name,
-        streaming=False,
-        max_tokens=MODEL_MAX_TOKENS,
-        reasoning_effort=MODEL_REASONING_EFFORT,
-    )
+    chat_model = ChatNebius(model=model_name, streaming=False)
     agent = create_agent(
         model=chat_model,
         tools=[create_search_tool(session)],
